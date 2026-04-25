@@ -6,6 +6,7 @@ import useAuthStore from '../../store/authStore';
 import useUIStore   from '../../store/uiStore';
 import useCartStore from '../../store/cartStore';
 import { cn }       from '../../utils/formatters';
+import SearchBar from '../shared/SearchBar';
 
 const NAV_LINKS = [
   { label: 'Shop',        href: '/products' },
@@ -185,6 +186,7 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+      <SearchBar />
     </motion.header>
   );
 }
