@@ -1,19 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect }   from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { router } from './router';
-import Toast from './components/ui/Toast';
+import Lenis           from 'lenis';
+import { router }      from './router';
+import Toast           from './components/ui/Toast';
 import './styles/globals.css';
-
-// ✅ lenis v1.1 — named export
-import Lenis from 'lenis';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime:           60 * 1000,
-      gcTime:              5 * 60 * 1000,
-      retry:               1,
+      staleTime:            60 * 1000,
+      gcTime:               5 * 60 * 1000,
+      retry:                1,
       refetchOnWindowFocus: false,
     },
   },
@@ -21,22 +19,11 @@ const queryClient = new QueryClient({
 
 export default function App() {
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing:   (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    });
-
-    let rafId;
-    const raf = (time) => {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    };
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-    };
+    const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    let id;
+    const raf = (time) => { lenis.raf(time); id = requestAnimationFrame(raf); };
+    id = requestAnimationFrame(raf);
+    return () => { cancelAnimationFrame(id); lenis.destroy(); };
   }, []);
 
   return (
