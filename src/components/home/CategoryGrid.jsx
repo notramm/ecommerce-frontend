@@ -14,7 +14,7 @@ export default function CategoryGrid() {
     staleTime: 10 * 60 * 1000,
   });
 
-  const categories = data?.data || [];
+  const categories = Array.isArray(data?.data) ? data.data : data?.data?.categories || [];
   const topLevel   = categories.filter((c) => !c.parent).slice(0, 6);
 
   return (

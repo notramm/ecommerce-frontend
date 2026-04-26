@@ -27,9 +27,9 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-3">
               {[
-                { icon: Instagram, href: '#' },
-                { icon: Twitter,   href: '#' },
-                { icon: Youtube,   href: '#' },
+                { icon: Instagram, href: '#instagram' },
+                { icon: Twitter,   href: '#twitter' },
+                { icon: Youtube,   href: '#youtube' },
               ].map(({ icon: Icon, href }) => (
                 <a
                   key={href}
