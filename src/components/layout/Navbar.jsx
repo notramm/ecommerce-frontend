@@ -7,6 +7,7 @@ import useUIStore   from '../../store/uiStore';
 import useCartStore from '../../store/cartStore';
 import { cn }       from '../../utils/formatters';
 import SearchBar from '../shared/SearchBar';
+import NotificationBell from '../shared/NotificationBell';
 
 const NAV_LINKS = [
   { label: 'Shop',        href: '/products' },
@@ -104,6 +105,8 @@ export default function Navbar() {
               <Heart size={18} />
             </Link>
           )}
+
+          <NotificationBell />
 
           {/* Cart */}
           <button

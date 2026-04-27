@@ -5,8 +5,8 @@ import {
   signInWithPhoneNumber,
   GoogleAuthProvider,
   signInWithPopup,
-  getAuth,
-}                          from 'firebase/auth';
+} from 'firebase/auth';
+import { auth } from '../utils/firebase';
 import { toast }           from 'sonner';
 import useAuthStore        from '../store/authStore';
 import useCartStore        from '../store/cartStore';
@@ -97,7 +97,6 @@ export function usePhoneAuth() {
   const { setAuth }                  = useAuthStore();
   const { items, clearGuestCart }    = useCartStore();
   const navigate                     = useNavigate();
-  const auth                         = getAuth();
 
   const setupRecaptcha = () => {
     if (!window.recaptchaVerifier) {
@@ -186,7 +185,6 @@ export function useGoogleAuth() {
   const { setAuth }           = useAuthStore();
   const { items, clearGuestCart } = useCartStore();
   const navigate              = useNavigate();
-  const auth                  = getAuth();
 
   const loginWithGoogle = async () => {
     setLoading(true);

@@ -8,7 +8,7 @@ import {
   Users, Settings, Shield
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
-import { logoutAPI } from '../../api/auth.api';
+import { logout as logoutAPI } from '../../api/auth.api';
 import { toast }    from 'sonner';
 import { cn }       from '../../utils/formatters';
 

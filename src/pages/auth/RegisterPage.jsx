@@ -1,4 +1,4 @@
-import { useState }       from 'react';
+import { useState, useEffect }       from 'react';
 import { Link }           from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm }        from 'react-hook-form';
@@ -29,7 +29,6 @@ const features = [
 function useResendTimer(seconds = 60) {
   const [timeLeft, setTimeLeft] = useState(0);
   const start = () => setTimeLeft(seconds);
-  const { useEffect } = require('react');
   useEffect(() => {
     if (timeLeft <= 0) return;
     const t = setInterval(() => setTimeLeft((p) => p - 1), 1000);
