@@ -156,6 +156,16 @@ body {
   letter-spacing: 0.08em;
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes confetti-fall {
+  0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(80vh) rotate(720deg) translateX(100px); }
+}
+
 /* ── Animations ─────────────────────────────────────────────────────────── */
 .animate-on-scroll {
   opacity: 0;

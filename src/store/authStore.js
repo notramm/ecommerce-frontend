@@ -26,8 +26,9 @@ const useAuthStore = create(
       isAgent:  () => get().user?.role === 'agent',
     }),
     {
-      name:    'auth',
-      partialize: (s) => ({ user: s.user, accessToken: s.accessToken, isLoggedIn: s.isLoggedIn }),
+      name:    'luxe-auth',
+      // accessToken intentionally excluded — lives in memory only, refreshed via HttpOnly cookie
+      partialize: (s) => ({ user: s.user, isLoggedIn: s.isLoggedIn }),
     }
   )
 );

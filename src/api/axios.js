@@ -20,50 +20,59 @@ api.interceptors.request.use((config) => {
 let isRefreshing  = false;
 let refreshQueue  = [];
 
+const processQueue = (error, token = null) => {
+  refreshQueue.forEach((p) => (error ? p.reject(error) : p.resolve(token)));
+  refreshQueue = [];
+};
+
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const original = error.config;
 
-    if (error.response?.status === 401 && !original._retry) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          refreshQueue.push({ resolve, reject });
-        }).then((token) => {
-          original.headers.Authorization = `Bearer ${token}`;
-          return api(original);
-        });
-      }
-
-      original._retry = true;
-      isRefreshing    = true;
-
-      try {
-        const { data } = await axios.post(
-          `${API_BASE}/auth/refresh-token`,
-          {},
-          { withCredentials: true }
-        );
-        const newToken = data.data.accessToken;
-        useAuthStore.getState().setAccessToken(newToken);
-
-        refreshQueue.forEach((p) => p.resolve(newToken));
-        refreshQueue = [];
-
-        original.headers.Authorization = `Bearer ${newToken}`;
-        return api(original);
-      } catch (e) {
-        refreshQueue.forEach((p) => p.reject(e));
-        refreshQueue = [];
-        useAuthStore.getState().logout();
-        window.location.href = '/login';
-        return Promise.reject(e);
-      } finally {
-        isRefreshing = false;
-      }
+    // Skip retry for non-401, already-retried, or auth endpoints (refresh/OTP)
+    if (
+      error.response?.status !== 401 ||
+      original._retry ||
+      original.url?.includes('/auth/refresh') ||
+      original.url?.includes('/auth/') && original.url?.includes('otp')
+    ) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        refreshQueue.push({ resolve, reject });
+      }).then((token) => {
+        original.headers.Authorization = `Bearer ${token}`;
+        return api(original);
+      });
+    }
+
+    original._retry = true;
+    isRefreshing    = true;
+
+    try {
+      const { data } = await axios.post(
+        `${API_BASE}/auth/refresh`,   // ← fixed endpoint
+        {},
+        { withCredentials: true }
+      );
+      const newToken = data.data.accessToken;
+      useAuthStore.getState().setAccessToken(newToken);
+
+      processQueue(null, newToken);
+
+      original.headers.Authorization = `Bearer ${newToken}`;
+      return api(original);
+    } catch (e) {
+      processQueue(e, null);
+      useAuthStore.getState().logout();
+      window.location.href = '/login';
+      return Promise.reject(e);
+    } finally {
+      isRefreshing = false;
+    }
   }
 );
 
