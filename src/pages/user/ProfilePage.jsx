@@ -160,8 +160,8 @@ export default function ProfilePage() {
                 <p className="text-stone/40 text-xs">No providers linked</p>
               ) : (
                 <div className="space-y-2">
-                  {providers.map((p) => (
-                    <div key={p.provider} className="flex items-center gap-3 py-2">
+                  {providers.map((p, i) => (
+                    <div key={`${p.provider}-${p.providerId || i}`} className="flex items-center gap-3 py-2">
                       <div className="w-7 h-7 bg-white/[0.04] border border-white/[0.06] flex items-center justify-center">
                         <Link2 size={13} className="text-stone/50" />
                       </div>

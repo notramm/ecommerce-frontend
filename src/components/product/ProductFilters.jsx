@@ -143,7 +143,9 @@ export default function ProductFilters({ filters, onFilter, onClear, activeCount
     staleTime: 10 * 60 * 1000,
   });
 
-  const categories = catData?.data?.filter(c => !c.parent) || [];
+  const categories = (catData?.data?.categories ?? catData?.data?.data ?? []).filter(c => !c.parent);
+
+  console.log('catData', catData);
 
   return (
     <div className="w-full">
