@@ -36,7 +36,10 @@ export default function ProfilePage() {
 
   const onSubmit = (d) => mutate(d);
 
-  const providers = user?.authProviders || [];
+  const providers = (user?.authProviders || []).filter(
+  (p, index, self) =>
+    index === self.findIndex((x) => x.provider === p.provider && x.providerId === p.providerId)
+);
 
   return (
     <PageWrapper>

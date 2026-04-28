@@ -13,9 +13,13 @@ export default function CategoryGrid() {
     queryFn:   getCategoryTree,
     staleTime: 10 * 60 * 1000,
   });
-
-  const categories = Array.isArray(data?.data) ? data.data : data?.data?.categories || [];
-  const topLevel   = categories.filter((c) => !c.parent).slice(0, 6);
+  
+  const rawCats   = Array.isArray(data?.data?.categories)
+  ? data.data.categories
+  : Array.isArray(data?.data)
+    ? data.data
+    : [];
+const topLevel  = rawCats.filter((c) => !c.parent).slice(0, 6);
 
   return (
     <section className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-16 py-16 sm:py-20 lg:py-24">
