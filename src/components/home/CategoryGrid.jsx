@@ -1,7 +1,7 @@
 import { useQuery }  from '@tanstack/react-query';
 import { Link }      from 'react-router-dom';
 import { motion }    from 'framer-motion';
-import { getCategoryTree } from '../../api/category.api';
+import { getCategoryTree, getCategories } from '../../api/category.api';
 import { Skeleton }  from '../ui/Skeleton';
 import { cn }        from '../../utils/formatters';
 
@@ -10,10 +10,10 @@ const COLORS = ['from-[#1a1510]', 'from-[#10141a]', 'from-[#141014]', 'from-[#0e
 export default function CategoryGrid() {
   const { data, isLoading } = useQuery({
     queryKey:  ['categories'],
-    queryFn:   getCategoryTree,
+    queryFn:   getCategories,
     staleTime: 10 * 60 * 1000,
   });
-  
+
   const rawCats   = Array.isArray(data?.data?.categories)
   ? data.data.categories
   : Array.isArray(data?.data)

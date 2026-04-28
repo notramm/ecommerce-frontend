@@ -43,3 +43,9 @@ export const rejectProduct       = (id, reason) => api.patch(`/products/${id}/re
 // Activity logs
 export const getActivityLogs = (params) => api.get('/admin/activity-logs', { params });
 export const getFraudReport  = (params) => api.get('/admin/fraud-report', { params });
+
+// Categories (admin)
+export const adminGetCategories = ()           => api.get('/categories/all');
+export const adminCreateCategory = (formData)  => api.post('/categories', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const adminUpdateCategory = (id, data)  => api.put(`/categories/${id}`, data);
+export const adminDeleteCategory = (id)        => api.delete(`/categories/${id}`);

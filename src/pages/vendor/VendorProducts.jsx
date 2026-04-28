@@ -23,12 +23,11 @@ import {
   createProduct,
   adjustStock,
 } from "../../api/vendor.api";
-import { getCategoryTree } from "../../api/category.api";
+import { getCategories } from "../../api/category.api";
 import { cn, formatPrice } from "../../utils/formatters";
 import { ORDER_STATUS } from "../../utils/constants";
 import { toast } from "sonner";
 import { useRef } from "react";
-import { getCategories } from "../../api/category.api";
 
 const STATUS_STYLE = {
   active: "text-emerald-400 border-emerald-400/20 bg-emerald-400/5",
@@ -544,33 +543,13 @@ export default function VendorProducts() {
     staleTime: 2 * 60 * 1000,
   });
 
-  const { data: catData } = useQuery({
+  const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
-    queryFn: async () => {
-      const { data } = await getCategoryTree();
-      // Return directly as array — normalized
-      const arr = data?.data?.categories || data?.data || data || [];
-      return Array.isArray(arr) ? arr : [];
-    },
+    queryFn: getCategories,
     staleTime: 10 * 60 * 1000,
   });
 
   const products = data?.data?.products || [];
-
-  const rawCats = Array.isArray(catData)
-    ? catData
-    : Array.isArray(catData?.data)
-      ? catData.data
-      : Array.isArray(catData?.data?.categories)
-        ? catData.data.categories
-        : [];
-
-  const { data: categories = [] } = useQuery({
-    queryKey: ["categories-flat"],
-    queryFn: getCategories,
-    staleTime: 10 * 60 * 1000,
-    select: (data) => data.filter((c) => !c.parent),
-  });
 
   return (
     <PageWrapper>
