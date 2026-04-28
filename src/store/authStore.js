@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create }  from 'zustand';
 import { persist } from 'zustand/middleware';
 
 const useAuthStore = create(
@@ -8,27 +8,32 @@ const useAuthStore = create(
       accessToken: null,
       isLoggedIn:  false,
 
-      setAuth: (user, accessToken) =>
-        set({ user, accessToken, isLoggedIn: true }),
+      setAuth: (user, accessToken) => {
+        set({ user, accessToken, isLoggedIn: true });
+      },
 
-      setAccessToken: (accessToken) =>
-        set({ accessToken }),
+      setAccessToken: (accessToken) => {
+        set({ accessToken });
+      },
 
-      updateUser: (updates) =>
-        set((s) => ({ user: { ...s.user, ...updates } })),
+      updateUser: (updates) => {
+        const current = get().user;
+        set({ user: current ? { ...current, ...updates } : updates });
+      },
 
-      logout: () =>
-        set({ user: null, accessToken: null, isLoggedIn: false }),
-
-      isRole: (role) => get().user?.role === role,
-      isAdmin:  () => get().user?.role === 'admin',
-      isVendor: () => get().user?.role === 'vendor',
-      isAgent:  () => get().user?.role === 'agent',
+      logout: () => {
+        set({ user: null, accessToken: null, isLoggedIn: false });
+      },
     }),
     {
-      name:    'luxe-auth',
-      // accessToken intentionally excluded — lives in memory only, refreshed via HttpOnly cookie
-      partialize: (s) => ({ user: s.user, isLoggedIn: s.isLoggedIn }),
+      name: 'luxe-auth',
+      // Dev mein sab persist karo including accessToken
+      // Production mein yahi rahega — refreshToken cookie se handle hoga
+      partialize: (state) => ({
+        user:        state.user,
+        accessToken: state.accessToken,
+        isLoggedIn:  state.isLoggedIn,
+      }),
     }
   )
 );
