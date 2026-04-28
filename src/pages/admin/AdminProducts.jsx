@@ -16,7 +16,11 @@ export default function AdminProducts() {
 
   const { data, isLoading } = useQuery({
     queryKey:  ['admin-products-pending'],
-    queryFn:   () => getPendingProducts({ limit: 30 }),
+    queryFn: async () => {
+    const { data } = await getPendingProducts({ limit: 30 });
+    console.log('data.data keys:', Object.keys(data.data));
+    return data.data;
+  },
     staleTime: 2 * 60 * 1000,
   });
 
@@ -37,7 +41,8 @@ export default function AdminProducts() {
     onError: (e) => toast.error(e.response?.data?.message || 'Failed'),
   });
 
-  const products = data?.data?.products || [];
+  const products = data?.products || [];
+  console.log('products:', products, 'data:', data);  // ye bhi lagao
 
   return (
     <PageWrapper>

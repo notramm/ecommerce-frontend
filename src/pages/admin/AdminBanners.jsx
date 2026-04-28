@@ -122,7 +122,7 @@ export default function AdminBanners() {
 
   const { data, isLoading } = useQuery({
     queryKey:  ['admin-banners', placement],
-    queryFn:   () => getBanners({ placement: placement || undefined, activeOnly: 'false' }),
+    queryFn:   async () => { const {data} = await getBanners({ placement: placement || undefined, activeOnly: 'false' }); return data.data; },
     staleTime: 2 * 60 * 1000,
   });
 
@@ -136,7 +136,7 @@ export default function AdminBanners() {
     onSuccess:  () => queryClient.invalidateQueries({ queryKey: ['admin-banners'] }),
   });
 
-  const banners = data?.data?.banners || [];
+  const banners = data?.banners || [];
 
   return (
     <PageWrapper>

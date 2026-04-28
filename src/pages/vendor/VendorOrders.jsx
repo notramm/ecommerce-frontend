@@ -171,7 +171,7 @@ export default function VendorOrders() {
 
   const { data, isLoading } = useQuery({
     queryKey:  ['vendor-orders', tab],
-    queryFn:   () => getVendorOrders({ status: tab || undefined, limit: 30 }),
+    queryFn:   async () => { const {data} = await getVendorOrders({ status: tab || undefined, limit: 30 }); return data.data; },
     staleTime: 60 * 1000,
     refetchInterval: 60 * 1000,
   });
@@ -182,7 +182,7 @@ export default function VendorOrders() {
     onError:    (e) => toast.error(e.response?.data?.message || 'Failed'),
   });
 
-  const orders = data?.data?.orders || [];
+  const orders = data?.orders || [];
 
   return (
     <PageWrapper>
