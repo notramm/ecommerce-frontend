@@ -45,11 +45,13 @@ export default function DealOfDay() {
   // Get a sale product for display
   const { data } = useQuery({
     queryKey:  ['deal-product'],
-    queryFn:   () => getProducts({ sort: 'price_asc', limit: 1, minPrice: 100 }),
+    queryFn:   async () => {
+    const { data } = await getProducts({ sort: 'price_asc', limit: 1, minPrice: 100 }); return data.data;
+  },
     staleTime: 10 * 60 * 1000,
   });
 
-  const product   = data?.data?.products?.[0];
+  const product   = data?.products?.[0];
   const price     = product?.basePrice || 999;
   const mrp       = product?.baseMrp   || 1499;
   const discount  = formatDiscount(mrp, price);

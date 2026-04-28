@@ -5,19 +5,28 @@ import ProductCarousel   from '../product/ProductCarousel';
 export default function FeaturedProducts() {
   const { data: featuredData, isLoading: fl } = useQuery({
     queryKey: ['products', 'featured'],
-    queryFn:  getFeaturedProducts,
+    queryFn: async () => {
+  const { data } = await getFeaturedProducts();
+  return data.data; 
+},
     staleTime: 5 * 60 * 1000,
   });
 
   const { data: newData, isLoading: nl } = useQuery({
     queryKey: ['products', 'new'],
-    queryFn:  getNewArrivals,
+    queryFn: async () => {
+  const { data } = await getNewArrivals();
+  return data.data; 
+},
     staleTime: 5 * 60 * 1000,
   });
 
   const { data: bsData, isLoading: bl } = useQuery({
     queryKey: ['products', 'bestsellers'],
-    queryFn:  getBestSellers,
+    queryFn: async () => {
+  const { data } = await getBestSellers();
+  return data.data;
+},
     staleTime: 5 * 60 * 1000,
   });
 
@@ -26,21 +35,21 @@ export default function FeaturedProducts() {
       <ProductCarousel
         title="Featured"
         eyebrow="Hand-picked"
-        products={featuredData?.data?.products || []}
+        products={featuredData?.products || []}
         loading={fl}
         viewAllHref="/products?isFeatured=true"
       />
       <ProductCarousel
         title="New Arrivals"
         eyebrow="Just Landed"
-        products={newData?.data?.products || []}
+        products={newData?.products || []}
         loading={nl}
         viewAllHref="/products?isNewArrival=true"
       />
       <ProductCarousel
         title="Best Sellers"
         eyebrow="Community Favorites"
-        products={bsData?.data?.products || []}
+        products={bsData?.products || []}
         loading={bl}
         viewAllHref="/products?isBestSeller=true"
       />

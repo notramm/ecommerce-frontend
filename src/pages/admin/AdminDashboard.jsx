@@ -4,7 +4,7 @@ import { motion }    from 'framer-motion';
 import {
   DollarSign, Package, Users, Store,
   AlertTriangle, TrendingUp, ShoppingBag,
-  FileCheck, ArrowUpRight, Clock
+  FileCheck, ArrowUpRight, Clock, Tag
 } from 'lucide-react';
 import PageWrapper   from '../../components/layout/PageWrapper';
 import DashboardShell from '../../components/layout/DashboardShell';
@@ -73,10 +73,10 @@ export default function AdminDashboard() {
   ];
 
   const alertStats = [
-    { label: 'Pending KYC',    value: (pending.pendingKYCVendors || 0).toString(), icon: FileCheck, alert: (pending.pendingKYCVendors || 0) > 0 },
-    { label: 'Pending Products',value:(pending.pendingProducts || 0).toString(),   icon: ShoppingBag, alert: (pending.pendingProducts || 0) > 0 },
-    { label: 'Pending Payouts', value:(pending.pendingPayouts || 0).toString(),    icon: DollarSign, alert: (pending.pendingPayouts || 0) > 0 },
-    { label: 'Fraud Alerts',    value:(pending.fraudAlerts || 0).toString(),       icon: AlertTriangle, alert: (pending.fraudAlerts || 0) > 0 },
+    { label: 'Pending KYC',    value: (pending.pendingKYCVendors || 0).toString(), icon: FileCheck,    alert: (pending.pendingKYCVendors || 0) > 0 },
+    { label: 'Pending Products',value:(pending.pendingProducts || 0).toString(),   icon: ShoppingBag,  alert: (pending.pendingProducts || 0) > 0 },
+    { label: 'Pending Payouts', value:(pending.pendingPayouts || 0).toString(),    icon: DollarSign,   alert: (pending.pendingPayouts || 0) > 0 },
+    { label: 'Fraud Alerts',    value:(pending.fraudAlerts || 0).toString(),       icon: AlertTriangle,alert: (pending.fraudAlerts || 0) > 0 },
   ];
 
   return (
@@ -208,6 +208,7 @@ export default function AdminDashboard() {
                     { label: 'All Orders',    href: '/admin/orders',        icon: Package },
                     { label: 'Manage Users',  href: '/admin/users',         icon: Users },
                     { label: 'Vendor KYC',    href: '/admin/vendors',       icon: Store },
+                    { label: 'Categories',    href: '/admin/categories',    icon: Tag },
                     { label: 'Banners',       href: '/admin/banners',       icon: ArrowUpRight },
                     { label: 'Notifications', href: '/admin/notifications', icon: ArrowUpRight },
                   ].map(({ label, href, icon: Icon }) => (

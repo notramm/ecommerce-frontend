@@ -51,6 +51,7 @@ const AdminVendors       = lazy(() => import('../pages/admin/AdminVendors'));
 const AdminAnalytics     = lazy(() => import('../pages/admin/AdminAnalytics'));
 const AdminBanners       = lazy(() => import('../pages/admin/AdminBanners'));
 const AdminNotifications = lazy(() => import('../pages/admin/AdminNotifications'));
+const AdminCategories    = lazy(() => import('../pages/admin/AdminCategories'));
 
 const NotFoundPage     = lazy(() => import('../pages/NotFoundPage'));
 const UnauthorizedPage = lazy(() => import('../pages/UnauthorizedPage'));
@@ -99,6 +100,7 @@ export const router = createBrowserRouter([
       { path: '/admin/analytics',     element: S(AdminAnalytics) },
       { path: '/admin/banners',       element: S(AdminBanners) },
       { path: '/admin/notifications', element: S(AdminNotifications) },
+      { path: '/admin/categories',    element: S(AdminCategories) },
     ],
   },
 

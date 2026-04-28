@@ -34,6 +34,7 @@ const adminLinks = [
   { href: '/admin/analytics',     label: 'Analytics',     icon: BarChart3 },
   { href: '/admin/orders',        label: 'Orders',        icon: Package },
   { href: '/admin/products',      label: 'Products',      icon: ShoppingBag },
+  { href: '/admin/categories',    label: 'Categories',    icon: Tag },
   { href: '/admin/users',         label: 'Users',         icon: Users },
   { href: '/admin/vendors',       label: 'Vendors & KYC', icon: Store },
   { href: '/admin/banners',       label: 'CMS & Banners', icon: Image },
