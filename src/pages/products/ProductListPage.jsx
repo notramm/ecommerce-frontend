@@ -148,7 +148,7 @@ export default function ProductListPage() {
     queryKey:       ['products', 'list', filters],
     queryFn:        ({ pageParam = 1 }) => getProducts(buildParams(pageParam)),
     getNextPageParam: (last, all) => {
-      const meta = last?.data?.meta;
+      const meta = last?.data?.data?.meta;
       return meta?.hasNextPage ? all.length + 1 : undefined;
     },
     initialPageParam: 1,
@@ -156,8 +156,8 @@ export default function ProductListPage() {
   });
 
   // Flatten pages
-  const products = data?.pages?.flatMap((p) => p.data?.products || []) || [];
-  const total    = data?.pages?.[0]?.data?.meta?.total || 0;
+  const products = data?.pages?.flatMap((p) => p.data?.data?.products || []) || [];
+  const total    = data?.pages?.[0]?.data?.data?.meta?.total || 0;
   const isFirstLoad = isLoading;
 
   // Infinite scroll sentinel

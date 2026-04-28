@@ -12,7 +12,6 @@ import { Skeleton } from '../ui/Skeleton';
 import { cn }       from '../../utils/formatters';
 import useAuthStore from '../../store/authStore';
 import { toast }    from 'sonner';
-import { getPagination } from '../../utils/formatters';
 
 const schema = z.object({
   rating: z.number().min(1, 'Please select a rating').max(5),
@@ -88,19 +87,20 @@ export default function ReviewsSection({ productId, orderId, rating, ratingCount
 
   const { data, isLoading } = useQuery({
     queryKey:  ['reviews', productId, sort, filterRating, page],
-    queryFn:   () => getProductReviews(productId, {
+    queryFn:   async () => {
+    const { data } = await getProductReviews(productId, {
       sort,
       rating: filterRating || undefined,
       page,
       limit: 5,
-    }),
+    }); return data.data; },
     staleTime: 2 * 60 * 1000,
     enabled:   !!productId,
   });
 
-  const reviews     = data?.data?.reviews || [];
-  const meta        = data?.data?.meta;
-  const distribution = data?.data?.distribution || {};
+  const reviews     = data?.reviews || [];
+  const meta        = data?.meta;
+  const distribution = data?.distribution || {};
 
   const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
     resolver: zodResolver(schema),

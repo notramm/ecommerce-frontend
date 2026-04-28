@@ -73,7 +73,7 @@ export function useWishlist() {
     queryFn:   async () => {
       const { getWishlist } = await import('../api/user.api');
       const { data } = await getWishlist({ limit: 50 });
-      return data.data;
+      return data.data.data;
     },
     enabled:   isLoggedIn,
     staleTime: 2 * 60 * 1000,

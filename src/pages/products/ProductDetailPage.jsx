@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useParams, Link }   from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery }          from '@tanstack/react-query';
@@ -145,36 +145,43 @@ export default function ProductDetailPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['product', slug],
-    queryFn:  () => getProductBySlug(slug),
+    queryFn:  async () => {
+    const { data } = await getProductBySlug(slug);
+    return data?.data;
+  },
     staleTime: 5 * 60 * 1000,
     enabled:   !!slug,
   });
 
-  const product = data?.data?.product;
+  const product = data?.product;
 
   // Related products
   const { data: relatedData } = useQuery({
     queryKey: ['related', product?.category?._id],
-    queryFn:  () => getProducts({
+    queryFn:  async () => {
+      const { data } = await getProducts({
+
       category: product.category?.slug,
       limit:    8,
       status:   'active',
-    }),
+    });
+    return data?.data;
+  },
     enabled:   !!product?.category?._id,
     staleTime: 5 * 60 * 1000,
   });
 
-  const related = relatedData?.data?.products?.filter((p) => p._id !== product?._id) || [];
+  const related = relatedData?.products?.filter((p) => p._id !== product?._id) || [];
 
   // Set first variant on load
-  useState(() => {
-    if (product?.variants?.[0] && !selectedVariant) {
-      setSelectedVariant(product.variants[0]);
-    }
-  });
+  useEffect(() => {
+  if (product?.variants?.[0] && !selectedVariant) {
+    setSelectedVariant(product.variants[0]);
+  }
+}, [product]);
 
   if (!selectedVariant && product?.variants?.[0]) {
-    setSelectedVariant(product.variants[0]);
+    
   }
 
   const price    = selectedVariant?.price || product?.basePrice || 0;

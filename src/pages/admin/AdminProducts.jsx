@@ -42,7 +42,6 @@ export default function AdminProducts() {
   });
 
   const products = data?.products || [];
-  console.log('products:', products, 'data:', data);  // ye bhi lagao
 
   return (
     <PageWrapper>

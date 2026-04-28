@@ -305,7 +305,6 @@ function ProductRow({ product, onAdjustStock }) {
         </button>
         <a
           href={`/products/${product.slug}`}
-          target="_blank"
           rel="noopener noreferrer"
           className="w-8 h-8 border border-white/[0.08] flex items-center justify-center text-stone/50 hover:text-cream hover:border-gold/30 transition-all"
           title="View"
