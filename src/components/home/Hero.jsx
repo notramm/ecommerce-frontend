@@ -53,7 +53,7 @@ export default function Hero() {
             <div className="overflow-hidden mb-3">
               <motion.h1
                 variants={item}
-                className="font-display text-[clamp(2.8rem,8vw,6.5rem)] text-cream leading-[1.0] tracking-[-0.02em]"
+                className="font-display text-[clamp(2.8rem,5.5vw,5rem)] text-cream leading-[1.0] tracking-[-0.02em]"
               >
                 Crafted for the
               </motion.h1>
@@ -61,7 +61,7 @@ export default function Hero() {
             <div className="overflow-hidden mb-6 sm:mb-8">
               <motion.h1
                 variants={item}
-                className="font-display text-[clamp(2.8rem,8vw,6.5rem)] italic text-gradient-gold leading-[1.1] tracking-[-0.02em]"
+                className="font-display text-[clamp(2.8rem,5.5vw,5rem)] italic text-gradient-gold leading-[1.1] tracking-[-0.02em]"
               >
                 Extraordinary
               </motion.h1>
