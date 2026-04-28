@@ -543,11 +543,18 @@ export default function VendorProducts() {
     staleTime: 2 * 60 * 1000,
   });
 
-  const { data: categories = [] } = useQuery({
+  const { data: catData } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
     staleTime: 10 * 60 * 1000,
   });
+
+  // Same extraction as CategoryGrid
+  const categories = Array.isArray(catData?.data?.categories)
+    ? catData.data.categories
+    : Array.isArray(catData?.data)
+      ? catData.data
+      : [];
 
   const products = data?.data?.products || [];
 
