@@ -325,7 +325,7 @@ function AddProductModal({ open, onClose, categories, queryClient }) {
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-40 bg-obsidian/80 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/70"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -361,7 +361,11 @@ function AddProductModal({ open, onClose, categories, queryClient }) {
               </div>
 
               {/* Scrollable body */}
-              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 space-y-4">
+              <div
+                className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 space-y-4"
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+              >
                 <Field
                   name="name"
                   label="Product Name"
@@ -917,8 +921,6 @@ export default function VendorProducts() {
         onClose={() => setModalOpen(false)}
         categories={categories}
         queryClient={queryClient}
-        onWheel={(e) => e.stopPropagation()}
-        onTouchMove={(e) => e.stopPropagation()}
       />
 
       {stockProduct && (
