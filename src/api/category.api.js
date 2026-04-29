@@ -10,3 +10,9 @@ export const getCategories = async () => {
   const arr = data?.data || [];
   return Array.isArray(arr) ? arr : [];
 };
+
+export const getCategoriesFlat = async () => {
+  const { data } = await api.get("/categories/all"); // need backend
+  const arr = data?.data || [];
+  return Array.isArray(arr) ? arr : [];
+};

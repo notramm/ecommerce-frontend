@@ -27,7 +27,7 @@ import {
   createProduct,
   adjustStock,
 } from "../../api/vendor.api";
-import { getCategories } from "../../api/category.api";
+import { getCategoriesFlat } from "../../api/category.api";
 import { getCategoryFields } from "../../api/admin.api";
 import { cn, formatPrice } from "../../utils/formatters";
 import { toast } from "sonner";
@@ -835,7 +835,7 @@ export default function VendorProducts() {
 
   const { data: categoriesRaw = [] } = useQuery({
     queryKey: ["categories-flat"],
-    queryFn: getCategories,
+    queryFn: getCategoriesFlat,
     staleTime: 10 * 60 * 1000,
   });
 
@@ -917,6 +917,8 @@ export default function VendorProducts() {
         onClose={() => setModalOpen(false)}
         categories={categories}
         queryClient={queryClient}
+        onWheel={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
       />
 
       {stockProduct && (

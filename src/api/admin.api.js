@@ -46,7 +46,7 @@ export const approveProduct = (id)          => api.patch(`/products/${id}/approv
 export const rejectProduct  = (id, reason)  => api.patch(`/products/${id}/reject`, { reason });
 
 // ── Categories (admin CRUD) ───────────────────────────────────────────────────
-export const adminGetCategories  = ()           => api.get('/categories');
+export const adminGetCategories  = ()           => api.get('/categories/all');
 export const adminCreateCategory = (formData)   => api.post('/categories', formData, {
   headers: { 'Content-Type': 'multipart/form-data' },
 });

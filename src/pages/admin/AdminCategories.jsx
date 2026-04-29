@@ -866,16 +866,115 @@ function CategoryFieldsPanel({ category, onClose, queryClient }) {
   );
 }
 
+function InlineCategoryFields({ category, queryClient }) {
+  const [fieldForm, setFieldForm] = useState(null);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["cat-fields", category._id],
+    queryFn: async () => {
+      const { data } = await getCategoryFields(category._id);
+      return data?.data?.fields || [];
+    },
+    staleTime: 60 * 1000,
+  });
+
+  const fields = data || [];
+
+  const deleteMutation = useMutation({
+    mutationFn: (fieldId) => deleteCategoryField(category._id, fieldId),
+    onSuccess: () => {
+      toast.success("Field deleted");
+      queryClient.invalidateQueries({
+        queryKey: ["cat-fields", category._id],
+      });
+    },
+    onError: (e) => toast.error(e.response?.data?.message || "Failed"),
+  });
+
+  return (
+    <div className="py-3 pr-4">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-2">
+        <span className="eyebrow text-gold/40 text-[10px]">Custom Fields</span>
+        <button
+          onClick={() => setFieldForm("new")}
+          className="flex items-center gap-1 px-2 py-1 bg-gold/10 border border-gold/20 text-gold text-[10px] hover:bg-gold/20 transition-colors"
+        >
+          <Plus size={10} /> Add Field
+        </button>
+      </div>
+
+      {/* Fields list */}
+      {isLoading ? (
+        <div className="space-y-1">
+          {[...Array(2)].map((_, i) => (
+            <Skeleton key={i} className="h-8" />
+          ))}
+        </div>
+      ) : fields.length === 0 ? (
+        <p className="text-stone/30 text-[10px] font-mono py-2">
+          No fields — click Add Field to create one
+        </p>
+      ) : (
+        <div className="space-y-1">
+          {fields.map((f) => (
+            <div
+              key={f._id}
+              className="flex items-center gap-2 px-2 py-1.5 border border-white/[0.05] bg-[#0d0d0d]"
+            >
+              <span className="text-cream text-xs flex-1">{f.label}</span>
+              <span className="text-[9px] font-mono text-stone/30 border border-white/[0.05] px-1">
+                {f.fieldType}
+              </span>
+              {f.isRequired && (
+                <span className="text-[9px] font-mono text-vermillion/50">
+                  req
+                </span>
+              )}
+              <button
+                onClick={() => setFieldForm(f)}
+                className="text-stone/30 hover:text-cream transition-colors"
+              >
+                <Pencil size={10} />
+              </button>
+              <button
+                onClick={() => {
+                  if (window.confirm(`Delete "${f.label}"?`))
+                    deleteMutation.mutate(f._id);
+                }}
+                className="text-stone/30 hover:text-vermillion transition-colors"
+              >
+                <Trash2 size={10} />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* FieldForm modal — same as before */}
+      {fieldForm && (
+        <FieldForm
+          categoryId={category._id}
+          field={fieldForm === "new" ? null : fieldForm}
+          onClose={() => setFieldForm(null)}
+          queryClient={queryClient}
+        />
+      )}
+    </div>
+  );
+}
+
 // ── Category Row ───────────────────────────────────────────────────────────────
 function CategoryRow({
   category,
   level = 0,
   onEdit,
   onDelete,
-  onManageFields,
   onAddSubcategory,
+  queryClient,
 }) {
   const [expanded, setExpanded] = useState(true);
+  const [fieldsOpen, setFieldsOpen] = useState(false);
   const hasChildren = category.children?.length > 0;
   const canAddSub = category.level < 2; // max depth = 2
 
@@ -962,8 +1061,13 @@ function CategoryRow({
             </button>
           )}
           <button
-            onClick={() => onManageFields(category)}
-            className="w-7 h-7 border border-white/[0.08] flex items-center justify-center text-stone/50 hover:text-gold hover:border-gold/30 transition-all"
+            onClick={() => setFieldsOpen(!fieldsOpen)} // ✅
+            className={cn(
+              "w-7 h-7 border border-white/[0.08] flex items-center justify-center transition-all",
+              fieldsOpen
+                ? "text-gold border-gold/30 bg-gold/10" // active state
+                : "text-stone/50 hover:text-gold hover:border-gold/30",
+            )}
             title="Manage Fields"
           >
             <Settings size={11} />
@@ -984,7 +1088,6 @@ function CategoryRow({
           </button>
         </div>
       </motion.div>
-
       {/* Children */}
       <AnimatePresence>
         {hasChildren &&
@@ -996,10 +1099,28 @@ function CategoryRow({
               level={level + 1}
               onEdit={onEdit}
               onDelete={onDelete}
-              onManageFields={onManageFields}
               onAddSubcategory={onAddSubcategory}
+              queryClient={queryClient}
             />
           ))}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {fieldsOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            style={{ paddingLeft: `${16 + level * 28 + 28}px` }} // same indent as children
+            className="border-b border-white/[0.04] bg-[#090909] overflow-hidden"
+          >
+            <InlineCategoryFields
+              category={category}
+              queryClient={queryClient}
+            />
+          </motion.div>
+        )}
       </AnimatePresence>
     </>
   );
@@ -1125,8 +1246,8 @@ export default function AdminCategories() {
                   level={0}
                   onEdit={handleEdit}
                   onDelete={setDeleting}
-                  onManageFields={setFieldsCategory}
                   onAddSubcategory={handleAddSubcategory}
+                  queryClient={queryClient}
                 />
               ))}
             </div>
