@@ -47,11 +47,11 @@ export default function OrderDetailPage() {
 
   const { data, isLoading } = useQuery({
     queryKey:  ['order', id],
-    queryFn:   () => getOrderById(id),
+    queryFn:   async () => { const {data} = await getOrderById(id); return data.data; },
     staleTime: 2 * 60 * 1000,
   });
 
-  const order = data?.data?.order;
+  const order = data?.order;
 
   const cancelMutation = useMutation({
     mutationFn: () => cancelOrder(id, cancelReason),

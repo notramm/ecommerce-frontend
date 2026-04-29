@@ -2,7 +2,8 @@ import api from './axios';
 
 export const getCart        = ()              => api.get('/cart');
 export const addToCart      = (data)          => api.post('/cart/add', data);
-export const updateCartItem = (itemId, qty)   => api.put(`/cart/items/${itemId}`, { quantity: qty });
+export const updateCartItem = (itemId, quantity) =>
+  api.put(`/cart/items/${itemId}`, { quantity });  // ← { quantity } not bare number
 export const removeCartItem = (itemId)        => api.delete(`/cart/items/${itemId}`);
 export const clearCart      = ()              => api.delete('/cart');
 export const applyCoupon    = (code)          => api.post('/cart/coupon', { code });

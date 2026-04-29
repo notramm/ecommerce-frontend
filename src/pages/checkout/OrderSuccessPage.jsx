@@ -1,25 +1,33 @@
-import { useEffect, useRef } from 'react';
-import { useParams, useLocation, Link } from 'react-router-dom';
-import { motion }            from 'framer-motion';
-import { gsap }              from 'gsap';
-import { CheckCircle2, Package, ArrowRight, Home, ShoppingBag } from 'lucide-react';
-import PageWrapper           from '../../components/layout/PageWrapper';
-import { useQuery }          from '@tanstack/react-query';
-import { getOrderById }      from '../../api/order.api';
-import { cn, formatPrice, formatDate } from '../../utils/formatters';
-import { Skeleton }          from '../../components/ui/Skeleton';
+import { useEffect, useRef } from "react";
+import { useParams, useLocation, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import {
+  CheckCircle2,
+  Package,
+  ArrowRight,
+  Home,
+  ShoppingBag,
+  Check,
+} from "lucide-react";
+import PageWrapper from "../../components/layout/PageWrapper";
+import { useQuery } from "@tanstack/react-query";
+import { getOrderById } from "../../api/order.api";
+import { cn, formatPrice, formatDate } from "../../utils/formatters";
+import { Skeleton } from "../../components/ui/Skeleton";
+import useAuthStore from '../../store/authStore';
 
 // ── Confetti (pure CSS + JS) ──────────────────────────────────────────────────
 function Confetti() {
   const ref = useRef(null);
 
   useEffect(() => {
-    const colors    = ['#c9a96e', '#e0c896', '#f5f0e8', '#8c8479', '#c94a2e'];
+    const colors = ["#c9a96e", "#e0c896", "#f5f0e8", "#8c8479", "#c94a2e"];
     const particles = 60;
 
     const items = Array.from({ length: particles }, (_, i) => {
-      const el         = document.createElement('div');
-      const size       = Math.random() * 8 + 4;
+      const el = document.createElement("div");
+      const size = Math.random() * 8 + 4;
       el.style.cssText = `
         position: absolute;
         width: ${size}px;
@@ -35,14 +43,14 @@ function Confetti() {
     });
 
     gsap.to(items, {
-      y:        () => window.innerHeight * 0.8 + Math.random() * 200,
-      x:        () => (Math.random() - 0.5) * 400,
+      y: () => window.innerHeight * 0.8 + Math.random() * 200,
+      x: () => (Math.random() - 0.5) * 400,
       rotation: () => Math.random() * 720,
-      opacity:  0,
+      opacity: 0,
       duration: () => 1.5 + Math.random() * 1.5,
-      delay:    () => Math.random() * 0.5,
-      ease:     'power2.out',
-      stagger:  0.02,
+      delay: () => Math.random() * 0.5,
+      ease: "power2.out",
+      stagger: 0.02,
       onComplete: () => items.forEach((el) => el.remove()),
     });
   }, []);
@@ -62,7 +70,11 @@ function OrderItemPreview({ item }) {
     <div className="flex items-center gap-3 py-3 border-b border-white/[0.05] last:border-b-0">
       <div className="w-12 h-14 bg-[#111] border border-white/[0.06] shrink-0 overflow-hidden">
         {image ? (
-          <img src={image} alt={item.name} className="w-full h-full object-cover" />
+          <img
+            src={image}
+            alt={item.name}
+            className="w-full h-full object-cover"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <ShoppingBag size={14} className="text-stone/20" />
@@ -70,51 +82,66 @@ function OrderItemPreview({ item }) {
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-cream text-xs font-medium line-clamp-1">{item.name}</p>
-        <p className="text-stone/40 text-[10px] font-mono mt-0.5">Qty: {item.quantity}</p>
+        <p className="text-cream text-xs font-medium line-clamp-1">
+          {item.name}
+        </p>
+        <p className="text-stone/40 text-[10px] font-mono mt-0.5">
+          Qty: {item.quantity}
+        </p>
       </div>
-      <span className="text-cream text-xs font-mono shrink-0">{formatPrice(item.total)}</span>
+      <span className="text-cream text-xs font-mono shrink-0">
+        {formatPrice(item.total)}
+      </span>
     </div>
   );
 }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function OrderSuccessPage() {
-  const { id }                   = useParams();
-  const { state }                = useLocation();
-  const checkRef                 = useRef(null);
-  const circleRef                = useRef(null);
+  const { id } = useParams();
+  const { state } = useLocation();
+  const checkRef = useRef(null);
+  const circleRef = useRef(null);
+  const { user } = useAuthStore();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['order', id],
-    queryFn:  async () => {
-      const { getOrderById } = await import('../../api/order.api');
+    queryKey: ["order", id],
+    queryFn: async () => {
+      const { getOrderById } = await import("../../api/order.api");
       const { data } = await getOrderById(id);
-      return data.data.order;
+
+      // Handle multiple response shapes safely
+      return (
+        data?.data?.order || // { data: { order: {...} } }
+        data?.data || // { data: {...} }
+        data?.order || // { order: {...} }
+        data || // {...}
+        null
+      );
     },
     staleTime: Infinity,
-    retry:     3,
+    retry: 2,
+    enabled: !!id,
   });
 
   const order = data;
-
   // Animate checkmark on mount
   useEffect(() => {
     if (!checkRef.current || !circleRef.current) return;
     const ctx = gsap.context(() => {
       gsap.from(circleRef.current, {
-        scale:    0,
-        opacity:  0,
+        scale: 0,
+        opacity: 0,
         duration: 0.6,
-        ease:     'back.out(1.7)',
-        delay:    0.2,
+        ease: "back.out(1.7)",
+        delay: 0.2,
       });
       gsap.from(checkRef.current, {
         strokeDashoffset: 100,
-        opacity:          0,
-        duration:         0.5,
-        ease:             'power2.out',
-        delay:            0.6,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        delay: 0.6,
       });
     });
     return () => ctx.revert();
@@ -122,11 +149,11 @@ export default function OrderSuccessPage() {
 
   // Status timeline
   const STATUS_STEPS = [
-    { key: 'confirmed',      label: 'Order Confirmed',    icon: CheckCircle2 },
-    { key: 'processing',     label: 'Processing',          icon: Package },
-    { key: 'shipped',        label: 'Shipped',             icon: Package },
-    { key: 'out_for_delivery', label: 'Out for Delivery', icon: Package },
-    { key: 'delivered',      label: 'Delivered',           icon: CheckCircle2 },
+    { key: "confirmed", label: "Order Confirmed", icon: CheckCircle2 },
+    { key: "processing", label: "Processing", icon: Package },
+    { key: "shipped", label: "Shipped", icon: Package },
+    { key: "out_for_delivery", label: "Out for Delivery", icon: Package },
+    { key: "delivered", label: "Delivered", icon: CheckCircle2 },
   ];
 
   const currentStatusIdx = order
@@ -137,7 +164,6 @@ export default function OrderSuccessPage() {
     <PageWrapper noFooter>
       <Confetti />
       <div className="max-w-2xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
-
         {/* Success animation */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -171,7 +197,9 @@ export default function OrderSuccessPage() {
           </div>
 
           <p className="eyebrow text-gold/50 mb-3 text-xs">
-            {state?.paymentMethod === 'cod' ? 'Order Placed' : 'Payment Successful'}
+            {state?.paymentMethod === "cod"
+              ? "Order Placed"
+              : "Payment Successful"}
           </p>
           <h1 className="font-display text-3xl sm:text-4xl text-cream mb-3">
             Thank you!
@@ -202,100 +230,134 @@ export default function OrderSuccessPage() {
             <Skeleton className="h-32 w-full" />
             <Skeleton className="h-48 w-full" />
           </div>
-        ) : order && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-4"
-          >
-            {/* Delivery info */}
-            <div className="bg-[#0d0d0d] border border-white/[0.07] p-5">
-              <p className="eyebrow text-stone/40 text-[10px] mb-4">Delivery Details</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-[10px] text-stone/30 mb-1">Delivering to</p>
-                  <p className="text-cream text-sm font-medium">{order.deliveryAddress?.fullName}</p>
-                  <p className="text-stone/60 text-xs mt-0.5 leading-relaxed">
-                    {order.deliveryAddress?.line1},
-                    {order.deliveryAddress?.line2 ? ` ${order.deliveryAddress.line2},` : ''}
-                    {' '}{order.deliveryAddress?.city}, {order.deliveryAddress?.state}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-stone/30 mb-1">Estimated Delivery</p>
-                  <p className="text-cream text-sm">
-                    {order.estimatedDelivery
-                      ? formatDate(order.estimatedDelivery, 'dd MMM yyyy')
-                      : '3-7 business days'}
-                  </p>
-                  <p className="text-[10px] text-stone/30 mt-2">Payment</p>
-                  <p className="text-cream text-sm capitalize">
-                    {order.isCOD ? 'Cash on Delivery' : 'Online (Paid)'}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Order status timeline */}
-            <div className="bg-[#0d0d0d] border border-white/[0.07] p-5">
-              <p className="eyebrow text-stone/40 text-[10px] mb-5">Order Status</p>
-              <div className="flex items-start">
-                {STATUS_STEPS.slice(0, 4).map((s, i) => {
-                  const done    = i <= currentStatusIdx;
-                  const active  = i === currentStatusIdx;
-                  return (
-                    <div key={s.key} className="flex-1 flex flex-col items-center">
-                      <div className="flex items-center w-full">
-                        <div className="flex-1 h-0.5 bg-white/[0.06] first:bg-transparent" />
-                        <motion.div
-                          animate={{
-                            backgroundColor: done ? '#c9a96e' : 'transparent',
-                            borderColor: done ? '#c9a96e' : 'rgba(255,255,255,0.1)',
-                          }}
-                          className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center shrink-0 z-10"
-                        >
-                          {done && (
-                            <Check size={10} className="text-obsidian" strokeWidth={3} />
-                          )}
-                        </motion.div>
-                        <div className="flex-1 h-0.5 bg-white/[0.06] last:bg-transparent" />
-                      </div>
-                      <p className={cn(
-                        'text-[9px] sm:text-[10px] mt-2 text-center font-mono px-1',
-                        active ? 'text-gold' : done ? 'text-stone/50' : 'text-stone/20'
-                      )}>
-                        {s.label}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Items */}
-            <div className="bg-[#0d0d0d] border border-white/[0.07] p-5">
-              <p className="eyebrow text-stone/40 text-[10px] mb-4">
-                Items ({order.items?.length})
-              </p>
-              {order.items?.slice(0, 3).map((item) => (
-                <OrderItemPreview key={item._id || item.sku} item={item} />
-              ))}
-              {order.items?.length > 3 && (
-                <p className="text-center text-xs text-stone/40 mt-3">
-                  +{order.items.length - 3} more items
+        ) : (
+          order && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: 0.3,
+                duration: 0.6,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="space-y-4"
+            >
+              {/* Delivery info */}
+              <div className="bg-[#0d0d0d] border border-white/[0.07] p-5">
+                <p className="eyebrow text-stone/40 text-[10px] mb-4">
+                  Delivery Details
                 </p>
-              )}
-
-              {/* Total */}
-              <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/[0.06]">
-                <span className="text-stone text-sm">Total Paid</span>
-                <span className="font-display text-xl text-cream">
-                  {formatPrice(order.totalAmount)}
-                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-[10px] text-stone/30 mb-1">
+                      Delivering to
+                    </p>
+                    <p className="text-cream text-sm font-medium">
+                      {order.deliveryAddress?.fullName}
+                    </p>
+                    <p className="text-stone/60 text-xs mt-0.5 leading-relaxed">
+                      {order.deliveryAddress?.line1},
+                      {order.deliveryAddress?.line2
+                        ? ` ${order.deliveryAddress.line2},`
+                        : ""}{" "}
+                      {order.deliveryAddress?.city},{" "}
+                      {order.deliveryAddress?.state}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-stone/30 mb-1">
+                      Estimated Delivery
+                    </p>
+                    <p className="text-cream text-sm">
+                      {order.estimatedDelivery
+                        ? formatDate(order.estimatedDelivery, "dd MMM yyyy")
+                        : "3-7 business days"}
+                    </p>
+                    <p className="text-[10px] text-stone/30 mt-2">Payment</p>
+                    <p className="text-cream text-sm capitalize">
+                      {order.isCOD ? "Cash on Delivery" : "Online (Paid)"}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </motion.div>
+
+              {/* Order status timeline */}
+              <div className="bg-[#0d0d0d] border border-white/[0.07] p-5">
+                <p className="eyebrow text-stone/40 text-[10px] mb-5">
+                  Order Status
+                </p>
+                <div className="flex items-start">
+                  {STATUS_STEPS.slice(0, 4).map((s, i) => {
+                    const done = i <= currentStatusIdx;
+                    const active = i === currentStatusIdx;
+                    return (
+                      <div
+                        key={s.key}
+                        className="flex-1 flex flex-col items-center"
+                      >
+                        <div className="flex items-center w-full">
+                          <div className="flex-1 h-0.5 bg-white/[0.06] first:bg-transparent" />
+                          <motion.div
+                            animate={{
+                              backgroundColor: done ? "#c9a96e" : "transparent",
+                              borderColor: done
+                                ? "#c9a96e"
+                                : "rgba(255,255,255,0.1)",
+                            }}
+                            className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center shrink-0 z-10"
+                          >
+                            {done && (
+                              <Check
+                                size={10}
+                                className="text-obsidian"
+                                strokeWidth={3}
+                              />
+                            )}
+                          </motion.div>
+                          <div className="flex-1 h-0.5 bg-white/[0.06] last:bg-transparent" />
+                        </div>
+                        <p
+                          className={cn(
+                            "text-[9px] sm:text-[10px] mt-2 text-center font-mono px-1",
+                            active
+                              ? "text-gold"
+                              : done
+                                ? "text-stone/50"
+                                : "text-stone/20",
+                          )}
+                        >
+                          {s.label}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Items */}
+              <div className="bg-[#0d0d0d] border border-white/[0.07] p-5">
+                <p className="eyebrow text-stone/40 text-[10px] mb-4">
+                  Items ({order.items?.length})
+                </p>
+                {order.items?.slice(0, 3).map((item) => (
+                  <OrderItemPreview key={item._id || item.sku} item={item} />
+                ))}
+                {order.items?.length > 3 && (
+                  <p className="text-center text-xs text-stone/40 mt-3">
+                    +{order.items.length - 3} more items
+                  </p>
+                )}
+
+                {/* Total */}
+                <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/[0.06]">
+                  <span className="text-stone text-sm">Total Paid</span>
+                  <span className="font-display text-xl text-cream">
+                    {formatPrice(order.totalAmount)}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          )
         )}
 
         {/* CTAs */}
@@ -310,7 +372,10 @@ export default function OrderSuccessPage() {
             className="flex-1 btn-primary py-4 flex items-center justify-center gap-3 group"
           >
             Track My Order
-            <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight
+              size={15}
+              className="group-hover:translate-x-1 transition-transform"
+            />
           </Link>
           <Link
             to="/"
@@ -328,8 +393,9 @@ export default function OrderSuccessPage() {
           transition={{ delay: 0.8 }}
           className="text-center text-[11px] text-stone/30 mt-6"
         >
-          A confirmation has been sent to {user?.email || 'your registered email'}.
-          {' '}Order updates will be sent via SMS and email.
+          A confirmation has been sent to{" "}
+          {user?.email || "your registered email"}. Order updates will be sent
+          via SMS and email.
         </motion.p>
       </div>
     </PageWrapper>

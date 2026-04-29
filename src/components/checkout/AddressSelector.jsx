@@ -1,4 +1,4 @@
-import { useState }  from 'react';
+import { useState, useEffect }  from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm }   from 'react-hook-form';
@@ -237,10 +237,12 @@ export default function AddressSelector({ selectedId, onSelect }) {
   const addresses = data || [];
 
   // Auto-select default address
+  useEffect(() => {
   if (!selectedId && addresses.length > 0) {
     const def = addresses.find((a) => a.isDefault) || addresses[0];
     if (def) onSelect(def._id);
   }
+}, [addresses, selectedId]);
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['addresses'] });
 

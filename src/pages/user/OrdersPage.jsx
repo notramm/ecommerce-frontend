@@ -100,11 +100,11 @@ export default function OrdersPage() {
 
   const { data, isLoading } = useQuery({
     queryKey:  ['my-orders', activeTab],
-    queryFn:   () => getMyOrders({ status: activeTab || undefined, limit: 20 }),
+    queryFn:   async () => { const {data} = await getMyOrders({ status: activeTab || undefined, limit: 20 }); return data.data; },
     staleTime: 2 * 60 * 1000,
   });
 
-  const orders = data?.data?.orders || [];
+  const orders = data?.orders || [];
 
   return (
     <PageWrapper>
