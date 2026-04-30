@@ -8,6 +8,7 @@ import useCartStore from '../../store/cartStore';
 import { cn }       from '../../utils/formatters';
 import SearchBar from '../shared/SearchBar';
 import NotificationBell from '../shared/NotificationBell';
+import ThemeToggle from '../ui/ThemeToggle';
 
 const NAV_LINKS = [
   { label: 'Shop',        href: '/products' },
@@ -106,6 +107,8 @@ export default function Navbar() {
             </Link>
           )}
 
+          <ThemeToggle />
+          
           <NotificationBell />
 
           {/* Cart */}

@@ -8,6 +8,7 @@ import Toast               from './components/ui/Toast';
 import useAuthStore        from './store/authStore';
 import api                 from './api/axios';
 import './styles/globals.css';
+import useUIStore          from './store/uiStore';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,6 +60,7 @@ function AppInner() {
   useTokenRefreshOnLoad();
 
   useEffect(() => {
+    useUIStore.getState().initTheme();
     const lenis = new Lenis({
       duration: 1.2,
       easing:   (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

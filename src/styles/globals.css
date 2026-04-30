@@ -5,23 +5,57 @@
 @tailwind utilities;
 
 /* ── Root Variables ─────────────────────────────────────────────────────── */
-:root {
-  --obsidian:   #0a0a0a;
-  --cream:      #f5f0e8;
-  --gold:       #c9a96e;
-  --gold-light: #e0c896;
-  --stone:      #8c8479;
-  --surface:    #111111;
-  --surface-2:  #1a1a1a;
-  --border:     rgba(255,255,255,0.07);
-  --border-gold: rgba(201,169,110,0.2);
-  --text-primary:   #f5f0e8;
-  --text-secondary: #8c8479;
-  --text-muted:     #5c574f;
+/* Dark theme — default*/
+
+/* Dark theme — default */
+:root,
+[data-theme="dark"] {
+  --color-obsidian:   #0a0a0a;
+  --color-cream:      #f5f0e8;
+  --color-stone:      #8c8479;
+  --color-gold:       #c9a96e;
+  --color-vermillion: #c94a2e;
+  --bg-primary:       #0a0a0a;
+  --bg-card:          #0d0d0d;
+  --bg-input:         #0f0f0f;
+  --border-base:      rgba(255,255,255,0.07);
+  --text-primary:     #f5f0e8;
+  --text-secondary:   #8c8479;
 
   --nav-height: 72px;
   --transition: cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Light theme */
+[data-theme="light"] {
+  --color-obsidian:   #faf8f4;
+  --color-cream:      #1a1a1a;
+  --color-stone:      #6b6660;
+  --color-gold:       #a07840;
+  --color-vermillion: #b03020;
+  --bg-primary:       #faf8f4;
+  --bg-card:          #f5f0e8;
+  --bg-input:         #ede8e0;
+  --border-base:      rgba(0,0,0,0.08);
+  --text-primary:     #1a1a1a;
+  --text-secondary:   #6b6660;
+
+  --nav-height: 72px;
+  --transition: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Apply theme vars to Tailwind custom classes */
+[data-theme="light"] .bg-obsidian      { background-color: var(--bg-primary); }
+[data-theme="light"] .bg-\[#0a0a0a\]  { background-color: var(--bg-primary); }
+[data-theme="light"] .bg-\[#0d0d0d\]  { background-color: var(--bg-card); }
+[data-theme="light"] .bg-\[#0f0f0f\]  { background-color: var(--bg-input); }
+[data-theme="light"] .bg-\[#111\]     { background-color: #e8e3d8; }
+[data-theme="light"] .bg-\[#0a0a0a\]  { background-color: var(--bg-input); }
+[data-theme="light"] .text-cream       { color: var(--text-primary); }
+[data-theme="light"] .text-stone       { color: var(--text-secondary); }
+[data-theme="light"] .border-white\/\[0\.07\] { border-color: var(--border-base); }
+[data-theme="light"] .border-white\/\[0\.08\] { border-color: var(--border-base); }
+[data-theme="light"] .noise-overlay    { opacity: 0; }
 
 /* ── Base Reset ─────────────────────────────────────────────────────────── */
 * { margin: 0; padding: 0; box-sizing: border-box; }
