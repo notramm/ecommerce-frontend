@@ -18,3 +18,11 @@ export const sendEmailChangeOTP  = (email) => api.post('/users/profile/email/sen
 export const verifyEmailChangeOTP= (otp)   => api.post('/users/profile/email/verify-otp', { otp });
 export const sendPhoneChangeOTP  = (phone) => api.post('/users/profile/phone/send-otp',   { phone });
 export const verifyPhoneChangeOTP= (otp)   => api.post('/users/profile/phone/verify-otp', { otp });
+
+export const updateAvatar = (file) => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+  return api.post('/users/profile/avatar', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};

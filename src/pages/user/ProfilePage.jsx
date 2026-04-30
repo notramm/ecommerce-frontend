@@ -25,6 +25,7 @@ import {
   verifyEmailChangeOTP,
   sendPhoneChangeOTP,
   verifyPhoneChangeOTP,
+  updateAvatar,
 } from "../../api/user.api";
 import { cn } from "../../utils/formatters";
 import { toast } from "sonner";
@@ -467,9 +468,18 @@ export default function ProfilePage() {
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const f = e.target.files?.[0];
-                      if (f) setAvatarPreview(URL.createObjectURL(f));
+                      if (!f) return;
+                      setAvatarPreview(URL.createObjectURL(f)); // instant preview
+                      try {
+                        const res = await updateAvatar(f);
+                        updateUser({ avatar: res.data.data.avatar });
+                        toast.success("Avatar updated");
+                      } catch {
+                        toast.error("Avatar upload failed");
+                        setAvatarPreview(null);
+                      }
                     }}
                   />
                 </label>
