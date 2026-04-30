@@ -1,25 +1,29 @@
-import { useQuery }  from '@tanstack/react-query';
-import { Link }      from 'react-router-dom';
-import { motion }    from 'framer-motion';
-import { getCategoryTree, getCategories } from '../../api/category.api';
-import { Skeleton }  from '../ui/Skeleton';
-import { cn }        from '../../utils/formatters';
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { getCategoryTree, getCategories } from "../../api/category.api";
+import { Skeleton } from "../ui/Skeleton";
+import { cn } from "../../utils/formatters";
 
-const COLORS = ['from-[#1a1510]', 'from-[#10141a]', 'from-[#141014]', 'from-[#0e1410]', 'from-[#1a1010]', 'from-[#10181a]'];
+const COLORS = [
+  "from-[#1a1510]",
+  "from-[#10141a]",
+  "from-[#141014]",
+  "from-[#0e1410]",
+  "from-[#1a1010]",
+  "from-[#10181a]",
+];
 
 export default function CategoryGrid() {
   const { data, isLoading } = useQuery({
-    queryKey:  ['categories'],
-    queryFn:   getCategories,
+    queryKey: ["categories"],
+    queryFn: getCategories,
     staleTime: 10 * 60 * 1000,
   });
 
-  const rawCats   = Array.isArray(data?.data?.categories)
-  ? data.data.categories
-  : Array.isArray(data?.data)
-    ? data.data
-    : [];
-const topLevel  = rawCats.filter((c) => !c.parent).slice(0, 6);
+  // getCategories already array return karta hai
+  const rawCats = Array.isArray(data) ? data : [];
+  const topLevel = rawCats.filter((c) => !c.parent).slice(0, 6);
 
   return (
     <section className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-16 py-16 sm:py-20 lg:py-24">
@@ -27,7 +31,9 @@ const topLevel  = rawCats.filter((c) => !c.parent).slice(0, 6);
       <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 sm:mb-12 gap-4">
         <div>
           <p className="eyebrow text-gold/50 mb-2">Browse</p>
-          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-cream">Shop by Category</h2>
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-cream">
+            Shop by Category
+          </h2>
         </div>
         <Link
           to="/categories"
@@ -40,12 +46,19 @@ const topLevel  = rawCats.filter((c) => !c.parent).slice(0, 6);
       {/* Grid */}
       {isLoading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {[...Array(6)].map((_, i) => <Skeleton key={i} className="aspect-square" />)}
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="aspect-square" />
+          ))}
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {topLevel.map((cat, i) => (
-            <CategoryCard key={cat._id} category={cat} colorClass={COLORS[i % COLORS.length]} index={i} />
+            <CategoryCard
+              key={cat._id}
+              category={cat}
+              colorClass={COLORS[i % COLORS.length]}
+              index={i}
+            />
           ))}
         </div>
       )}
@@ -58,15 +71,24 @@ function CategoryCard({ category, colorClass, index }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-30px' }}
-      transition={{ duration: 0.5, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.07,
+        ease: [0.16, 1, 0.3, 1],
+      }}
     >
       <Link
         to={`/products?category=${category.slug}`}
         className="block group relative overflow-hidden aspect-square bg-[#111] border border-white/[0.06] hover:border-gold/20 transition-colors duration-300"
       >
         {/* Background gradient */}
-        <div className={cn('absolute inset-0 bg-gradient-to-br to-[#111] opacity-60 transition-opacity duration-500 group-hover:opacity-80', colorClass)} />
+        <div
+          className={cn(
+            "absolute inset-0 bg-gradient-to-br to-[#111] opacity-60 transition-opacity duration-500 group-hover:opacity-80",
+            colorClass,
+          )}
+        />
 
         {/* Category image */}
         {category.image ? (
