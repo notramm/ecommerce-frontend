@@ -29,30 +29,23 @@ export default function FeaturedProducts() {
 },
     staleTime: 5 * 60 * 1000,
   });
-
+  
   return (
     <div className="space-y-16 sm:space-y-20 lg:space-y-24 py-8">
-      <ProductCarousel
-        title="Featured"
-        eyebrow="Hand-picked"
-        products={featuredData?.products || []}
-        loading={fl}
-        viewAllHref="/products?isFeatured=true"
-      />
-      <ProductCarousel
-        title="New Arrivals"
-        eyebrow="Just Landed"
-        products={newData?.products || []}
-        loading={nl}
-        viewAllHref="/products?isNewArrival=true"
-      />
-      <ProductCarousel
-        title="Best Sellers"
-        eyebrow="Community Favorites"
-        products={bsData?.products || []}
-        loading={bl}
-        viewAllHref="/products?isBestSeller=true"
-      />
-    </div>
+    <ProductCarousel
+      title="New Arrivals"
+      eyebrow="Just Landed"
+      products={newData?.products || []}
+      loading={nl}
+      viewAllHref="/products?isNewArrival=true"
+    />
+    <ProductCarousel
+      title="Best Sellers"
+      eyebrow="Community Favorites"
+      products={bsData?.products || []}
+      loading={bl}
+      viewAllHref="/products?isBestSeller=true"
+    />
+  </div>
   );
 }
