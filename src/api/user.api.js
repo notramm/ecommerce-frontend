@@ -13,3 +13,8 @@ export const addAddress        = (data)        => api.post('/users/addresses', d
 export const updateAddress     = (id, data)    => api.put(`/users/addresses/${id}`, data);
 export const deleteAddress     = (id)          => api.delete(`/users/addresses/${id}`);
 export const setDefaultAddress = (id)          => api.patch(`/users/addresses/${id}/default`);
+
+export const sendEmailChangeOTP  = (email) => api.post('/users/profile/email/send-otp',   { email });
+export const verifyEmailChangeOTP= (otp)   => api.post('/users/profile/email/verify-otp', { otp });
+export const sendPhoneChangeOTP  = (phone) => api.post('/users/profile/phone/send-otp',   { phone });
+export const verifyPhoneChangeOTP= (otp)   => api.post('/users/profile/phone/verify-otp', { otp });
