@@ -108,7 +108,7 @@ export default function VendorDashboard() {
     queryKey: ["vendor-analytics", period],
     queryFn: async () => {
       const { data } = await getSalesAnalytics(period);
-      console.log("Dashboard data:", data);
+      console.log('FULL DATA:', JSON.stringify(data.data, null, 2));
       return data.data;
     },
 
