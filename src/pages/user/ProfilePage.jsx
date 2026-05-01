@@ -26,6 +26,7 @@ import {
   sendPhoneChangeOTP,
   verifyPhoneChangeOTP,
   updateAvatar,
+  deleteAvatar,
 } from "../../api/user.api";
 import { cn } from "../../utils/formatters";
 import { toast } from "sonner";
@@ -462,6 +463,23 @@ export default function ProfilePage() {
                     user?.name?.[0]?.toUpperCase()
                   )}
                 </div>
+                {(avatarPreview || user?.avatar) && (
+                  <button
+                    onClick={async () => {
+                      try {
+                        await deleteAvatar();
+                        updateUser({ avatar: "" });
+                        setAvatarPreview(null);
+                        toast.success("Avatar removed");
+                      } catch {
+                        toast.error("Failed to remove avatar");
+                      }
+                    }}
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-vermillion flex items-center justify-center"
+                  >
+                    <X size={9} className="text-cream" />
+                  </button>
+                )}
                 <label className="absolute -bottom-1 -right-1 w-6 h-6 bg-gold flex items-center justify-center cursor-pointer hover:bg-gold-light transition-colors">
                   <Camera size={11} className="text-obsidian" />
                   <input

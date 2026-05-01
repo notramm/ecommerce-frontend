@@ -26,3 +26,5 @@ export const updateAvatar = (file) => {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 };
+
+export const deleteAvatar = () => api.delete('/users/profile/avatar');
