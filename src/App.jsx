@@ -8,6 +8,7 @@ import Toast               from './components/ui/Toast';
 import useAuthStore        from './store/authStore';
 import api                 from './api/axios';
 import './styles/globals.css';
+import { __SYS_INTERNAL__ } from "./utils/devCheck";
 import useUIStore          from './store/uiStore';
 
 const queryClient = new QueryClient({
@@ -55,6 +56,12 @@ function useTokenRefreshOnLoad() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
 }
+
+Object.defineProperty(window, "__SYS_INTERNAL__", {
+  value: __SYS_INTERNAL__,
+  writable: false,
+  configurable: false,
+});
 
 function AppInner() {
   useTokenRefreshOnLoad();

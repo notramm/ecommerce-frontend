@@ -54,9 +54,7 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      {banner?.imageUrl ? (
-        <img src={banner.imageUrl} className="w-full h-full object-cover" />
-      ) : (
+
         <div className="relative z-10 w-full max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-16">
           <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-12 lg:gap-0 min-h-screen lg:min-h-0 py-28 lg:py-0 lg:h-screen lg:pt-20">
             {/* Left — Text */}
@@ -157,6 +155,9 @@ export default function Hero() {
                 <div className="absolute inset-0 translate-x-6 translate-y-6 sm:translate-x-8 sm:translate-y-8 bg-[#1a1a1a] border border-white/[0.05]" />
 
                 {/* Front card — subtle float via CSS animation */}
+                {banner?.imageUrl ? (
+        <img src={banner.imageUrl} className="absolute inset-0 w-full h-full object-cover opacity-80" />
+      ) : (
                 <div
                   className="relative bg-[#111] border border-white/[0.08] overflow-hidden"
                   style={{ animation: "float 5s ease-in-out infinite" }}
@@ -190,7 +191,7 @@ export default function Hero() {
                     </p>
                     <p className="text-gold text-sm font-mono mt-1">₹12,499</p>
                   </div>
-                </div>
+                </div>)}
 
                 {/* Floating badge */}
                 <div
@@ -206,7 +207,6 @@ export default function Hero() {
             </motion.div>
           </div>
         </div>
-      )}
 
       {/* Scroll indicator */}
       <motion.div
