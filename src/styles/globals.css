@@ -5,8 +5,6 @@
 @tailwind utilities;
 
 /* ── Root Variables ─────────────────────────────────────────────────────── */
-/* Dark theme — default*/
-
 /* Dark theme — default */
 :root,
 [data-theme="dark"] {
@@ -34,8 +32,6 @@
   --color-cream:      #1c1a16;   /* warm dark text */
   --color-stone:      #7a7168;
   --color-gold:       #9b6f35;   /* deeper gold */
-  --gold:       #c9a96e;
-  --gold-light: #e0c896;
   --color-vermillion: #b03020;
   --bg-primary:       #fdf8f0;   /* main bg */
   --bg-card:          #f5eddf;   /* card bg */
@@ -43,6 +39,15 @@
   --border-base:      rgba(0,0,0,0.07);
   --text-primary:     #1c1a16;
   --text-secondary:   #7a7168;
+  --gold:       #9b6f35;
+  --gold-light: #c49040;
+  --obsidian:   #fdf8f0;
+  --cream:      #1c1a16;
+  --stone:      #7a7168;
+  --surface:    #ede3d0;
+  --surface-2:  #e8dac4;
+  --border:     rgba(0,0,0,0.08);
+  --card:       0 2px 16px rgba(0,0,0,0.06);
 
   --nav-height: 72px;
   --transition: cubic-bezier(0.16, 1, 0.3, 1);
@@ -110,12 +115,21 @@
 [data-theme="light"] .to-\[\#1a1a1a\]  { --tw-gradient-to: #e0d9ce var(--tw-gradient-to-position); }
 
 /* ── Gradients — VendorCTA, WalletPage, ProfilePage, AdminDashboard, VendorDashboard ── */
-[data-theme="light"] .from-\[\#141008\] { --tw-gradient-from: #f5edd8 var(--tw-gradient-from-position); }
-[data-theme="light"] .via-\[\#0f0c06\]  { --tw-gradient-via: #f0e8d5 var(--tw-gradient-via-position); }
-[data-theme="light"] .via-\[\#0f0d08\]  { --tw-gradient-via: #f2ead8 var(--tw-gradient-via-position); }
-[data-theme="light"] .via-\[\#141410\]  { --tw-gradient-via: #ede8d8 var(--tw-gradient-via-position); }
-[data-theme="light"] .to-\[\#0a0a0a\]   { --tw-gradient-to: var(--bg-primary) var(--tw-gradient-to-position); }
-
+[data-theme="light"] .from-\[\#141008\] {
+  --tw-gradient-from: #f5eddf var(--tw-gradient-from-position);
+}
+[data-theme="light"] .via-\[\#0f0c06\]  {
+  --tw-gradient-via: #f5eddf var(--tw-gradient-via-position);
+}
+[data-theme="light"] .via-\[\#0f0d08\]  {
+  --tw-gradient-via: #f5eddf var(--tw-gradient-via-position);
+}
+[data-theme="light"] .via-\[\#141410\]  {
+  --tw-gradient-via: #f5eddf var(--tw-gradient-via-position);
+}
+[data-theme="light"] .to-\[\#0a0a0a\]   {
+  --tw-gradient-to: #f5eddf var(--tw-gradient-to-position);
+}
 /* ── Force body color ── */
 [data-theme="light"] body {
   color: var(--text-primary);
