@@ -463,7 +463,7 @@ export default function ProfilePage() {
                     user?.name?.[0]?.toUpperCase()
                   )}
                 </div>
-                {(avatarPreview || user?.avatar) && (
+                {user?.avatar && user.avatar.trim() !== "" && (
                   <button
                     onClick={async () => {
                       try {
@@ -492,7 +492,9 @@ export default function ProfilePage() {
                       setAvatarPreview(URL.createObjectURL(f)); // instant preview
                       try {
                         const res = await updateAvatar(f);
-                        updateUser({ avatar: res.data.data.avatar });
+                        const newAvatar =
+                          res.data.data.avatar || res.data.data.user?.avatar;
+                        updateUser({ avatar: newAvatar });
                         toast.success("Avatar updated");
                       } catch {
                         toast.error("Avatar upload failed");

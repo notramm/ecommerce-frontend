@@ -34,6 +34,8 @@
   --color-cream:      #1c1a16;   /* warm dark text */
   --color-stone:      #7a7168;
   --color-gold:       #9b6f35;   /* deeper gold */
+  --gold:       #c9a96e;
+  --gold-light: #e0c896;
   --color-vermillion: #b03020;
   --bg-primary:       #fdf8f0;   /* main bg */
   --bg-card:          #f5eddf;   /* card bg */
@@ -122,6 +124,70 @@
 
 /* ── bg-[#0a0a0a] input priority fix ── */
 [data-theme="light"] .bg-\[#0a0a0a\]   { background-color: var(--bg-input) !important; }
+
+/* ── bg-[#090909] — AdminCategories inline fields panel ── */
+[data-theme="light"] .bg-\[#090909\]   { background-color: #ede5d4; }
+
+/* ── text-cream opacity variants ── */
+[data-theme="light"] .text-cream\/10   { color: rgba(28,26,22,0.10); }
+
+/* ── Gold background opacity variants ── */
+[data-theme="light"] .bg-gold\/3       { background-color: rgba(155,111,53,0.04); }
+[data-theme="light"] .hover\:bg-gold\/3:hover { background-color: rgba(155,111,53,0.06); }
+
+/* ── Hover border gold variants ── */
+[data-theme="light"] .hover\:border-gold\/15:hover { border-color: rgba(155,111,53,0.15); }
+
+/* ── Scrollbar — light mode ── */
+[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg-primary); }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: #b8a990; }
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
+
+/* ── Selection — light mode ── */
+[data-theme="light"] ::selection {
+  background: rgba(155,111,53,0.20);
+  color: var(--text-primary);
+}
+
+/* ── btn-outline text fix — light mode ── */
+/* btn-outline uses text-cream which maps to dark text in light — OK */
+/* but border-gold/30 on light needs no fix, handled by Tailwind custom color */
+
+/* ── Native select dropdown bg — light mode ── */
+[data-theme="light"] select {
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+}
+[data-theme="light"] select option {
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+}
+
+/* ── card-hover shadow — light mode ── */
+[data-theme="light"] .card-hover:hover {
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 0 0 1px rgba(155,111,53,0.12);
+}
+
+/* ── text-gradient-gold — light mode fix ── */
+[data-theme="light"] .text-gradient-gold {
+  background: linear-gradient(135deg, #7a5520 0%, #9b6f35 50%, #c49040 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Dashed border in light mode ── */
+[data-theme="light"] .border-dashed { border-color: rgba(0,0,0,0.12); }
+
+/* ── focus:ring-gold/10 — light mode ── */
+/* Tailwind handles this via custom color, no override needed */
+
+/* ── border-gold/* variants — ensure visible in light ── */
+/* gold is redefined as #9b6f35 in light, Tailwind opacity variants work from custom color */
+
+/* ── hover:bg-white/[0.05] and /[0.06] — light mode ── */
+[data-theme="light"] .hover\:bg-white\/\[0\.05\]:hover { background-color: rgba(0,0,0,0.06); }
+[data-theme="light"] .hover\:bg-white\/\[0\.06\]:hover { background-color: rgba(0,0,0,0.07); }
 
 /* ── Base Reset ─────────────────────────────────────────────────────────── */
 * { margin: 0; padding: 0; box-sizing: border-box; }
